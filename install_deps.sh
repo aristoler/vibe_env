@@ -227,7 +227,8 @@ check_tools
 echo ""
 echo_info "Done! Please verify installation by running:"
 echo "      $INSTALL_BIN/nvim --version"
-echo_info "NOTE: To enable zoxide/fzf, add the following to your .bashrc/.zshrc:"
-echo '      eval "$(zoxide init bash)"  # or zsh'
-echo '      [ -f ~/.fzf.bash ] && source ~/.fzf.bash'
+echo_info "FINAL STEP: Activate all tools with ONE line."
+echo "      Add this to your ~/.bashrc or ~/.zshrc:"
+echo "      [ -f ~/.vibe_init.sh ] && source ~/.vibe_init.sh"
+echo ""
 echo_info "Yazi keymap: You can now run 'y' (if aliased) or 'yazi' to browse files."
