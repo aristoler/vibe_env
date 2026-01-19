@@ -151,10 +151,10 @@ install_shell_tools() {
         # 使用官方 git 方式安装，因为它可以自动配置按键绑定 (Ctrl+R, Ctrl+T)
         FZF_DIR="$HOME/.fzf"
         if [ -d "$FZF_DIR" ]; then
-            cd "$FZF_DIR" && git pull && ./install --bin --64 --no-update-rc
+            cd "$FZF_DIR" && git pull && ./install --bin --no-update-rc
         else
             git clone --depth 1 https://github.com/junegunn/fzf.git "$FZF_DIR"
-            "$FZF_DIR/install" --bin --64 --no-update-rc --no-completion --no-key-bindings
+            "$FZF_DIR/install" --bin --no-update-rc --no-completion --no-key-bindings
         fi
         # Link binary
         ln -sf "$FZF_DIR/bin/fzf" "$INSTALL_BIN/fzf"
