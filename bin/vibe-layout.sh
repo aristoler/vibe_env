@@ -30,22 +30,31 @@ fi
 
 # 如果走到这里，说明 Session 不存在，开始新建
 echo "✨ Creating new session: $SESSION ($LAYOUT)"
-tmux new-session -d -s $SESSION -n "Editor"
+# 创建会话，并指定窗口大小以避免 "size missing" 错误 (假设标准大小)
+tmux new-session -d -s $SESSION -n "Editor" -x 200 -y 50
+sleep 0.5 # 给 Tmux 一点启动时间
 
 # 根据选择的布局进行切分
 if [ "$LAYOUT" == "dev" ]; then
     # Dev 布局: 左 70% | 右 30%
     tmux send-keys -t $SESSION:Editor "vibe ." C-m
+    
     # 这里的 30 是指右边新窗口占 30%
-    tmux split-window -h -t $SESSION:Editor -p 30
+    tmux split-window -h -t $SESSION:Editor -l 30%
+    sleep 0.1
     tmux send-keys -t $SESSION:Editor.1 "ls -la" C-m 
-    tmux split-window -v -t $SESSION:Editor.1 -p 50
+    
+    tmux split-window -v -t $SESSION:Editor.1 -l 50%
+    sleep 0.1
     tmux send-keys -t $SESSION:Editor.2 "lazygit" C-m
+    
+    # 回到左侧编辑器
     tmux select-pane -t $SESSION:Editor.0
 
 elif [ "$LAYOUT" == "debug" ]; then
     tmux send-keys -t $SESSION:Editor "vibe ." C-m
-    tmux split-window -v -t $SESSION:Editor -p 20
+    tmux split-window -v -t $SESSION:Editor -l 20%
+    sleep 0.1
     tmux send-keys -t $SESSION:Editor.1 "htop" C-m
     tmux select-pane -t $SESSION:Editor.0
 
