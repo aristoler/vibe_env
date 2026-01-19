@@ -141,11 +141,46 @@ check_tools() {
     fi
 }
 
+# --- 4. Install Shell Enhancements (FZF & Zoxide) ---
+install_shell_tools() {
+    # 4.1 FZF
+    if command -v fzf &> /dev/null && [ "$FORCE_UPGRADE" = false ]; then
+        echo_info "fzf is already installed."
+    else
+        echo_info "Installing fzf (Latest)..."
+        # 使用官方 git 方式安装，因为它可以自动配置按键绑定 (Ctrl+R, Ctrl+T)
+        FZF_DIR="$HOME/.fzf"
+        if [ -d "$FZF_DIR" ]; then
+            cd "$FZF_DIR" && git pull && ./install --bin --64 --no-update-rc
+        else
+            git clone --depth 1 https://github.com/junegunn/fzf.git "$FZF_DIR"
+            "$FZF_DIR/install" --bin --64 --no-update-rc --no-completion --no-key-bindings
+        fi
+        # Link binary
+        ln -sf "$FZF_DIR/bin/fzf" "$INSTALL_BIN/fzf"
+        echo_info "fzf installed. (Please configure shell integration manually if needed)"
+    fi
+
+    # 4.2 Zoxide
+    if command -v zoxide &> /dev/null && [ "$FORCE_UPGRADE" = false ]; then
+        echo_info "zoxide is already installed."
+    else
+        echo_info "Installing zoxide..."
+        # 官方脚本安装到 ~/.local/bin
+        curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | \
+            ZOXIDE_BIN_DIR="$INSTALL_BIN" bash
+    fi
+}
+
 # --- Main ---
 install_nvim
 install_lazygit
+install_shell_tools
 check_tools
 
 echo ""
 echo_info "Done! Please verify installation by running:"
 echo "      $INSTALL_BIN/nvim --version"
+echo_info "NOTE: To enable zoxide/fzf, add the following to your .bashrc/.zshrc:"
+echo '      eval "$(zoxide init bash)"  # or zsh'
+echo '      [ -f ~/.fzf.bash ] && source ~/.fzf.bash'
