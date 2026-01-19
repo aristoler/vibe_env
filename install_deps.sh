@@ -2,8 +2,15 @@
 # Vibe Dependencies Installer
 # 专注于在 Linux/Mac 上安装核心依赖工具 (Neovim, Lazygit 等)
 # 优先使用无需 Root 权限的本地安装方式 (~/.local/bin)
+# Usage: ./install_deps.sh [--upgrade]
 
 set -e
+
+FORCE_UPGRADE=false
+if [[ "$1" == "--upgrade" || "$1" == "-u" ]]; then
+    FORCE_UPGRADE=true
+    echo "🔄 Upgrade mode enabled: Will force reinstall tools."
+fi
 
 INSTALL_DIR="$HOME/.local/bin"
 mkdir -p "$INSTALL_DIR"
@@ -27,9 +34,9 @@ echo_info "PATH Check: Ensure $INSTALL_DIR is in your PATH."
 
 # --- 1. Install Neovim ---
 install_nvim() {
-    if command -v nvim &> /dev/null; then
+    if command -v nvim &> /dev/null && [ "$FORCE_UPGRADE" = false ]; then
         echo_info "Neovim is already installed: $(nvim --version | head -n 1)"
-        # 这里可以加版本检查逻辑，暂时略过
+        echo_info "Use './install_deps.sh --upgrade' to force update."
         return
     fi
 
@@ -44,13 +51,18 @@ install_nvim() {
         # AppImage 可能需要 FUSE，如果无法运行，提示用户
         echo_warn "If ./nvim fails to run, you might need to extract the AppImage manually or install fuse."
     elif [ "$OS" = "Darwin" ]; then
-        echo_warn "On macOS, it's recommended to use Homebrew: 'brew install neovim'"
+        if command -v brew &> /dev/null; then
+             echo_info "Upgrading Neovim via Homebrew..."
+             brew upgrade neovim || brew install neovim
+        else
+             echo_warn "Homebrew not found. Please install manually."
+        fi
     fi
 }
 
 # --- 2. Install Lazygit ---
 install_lazygit() {
-    if command -v lazygit &> /dev/null; then
+    if command -v lazygit &> /dev/null && [ "$FORCE_UPGRADE" = false ]; then
         echo_info "Lazygit is already installed."
         return
     fi
@@ -64,7 +76,9 @@ install_lazygit() {
         install lazygit "$INSTALL_DIR"
         rm lazygit lazygit.tar.gz
     elif [ "$OS" = "Darwin" ]; then
-         echo_warn "On macOS, please use: 'brew install lazygit'"
+         if command -v brew &> /dev/null; then
+             brew upgrade lazygit || brew install lazygit
+         fi
     fi
 }
 
