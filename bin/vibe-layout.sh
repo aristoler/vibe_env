@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# 使用当前目录名作为会话名，实现多项目隔离
+DIR_NAME=$(basename "$PWD")
+SESSION="vibe-$DIR_NAME"
+# 核心逻辑修改：如果没传参数，默认使用 dev 布局
+LAYOUT=${1:-dev}
+RESET=$2
+
+# 检查是否安装了 tmux
+if ! command -v tmux &> /dev/null; then
+    echo "❌ Error: Tmux not installed."
+    exit 1
+fi
+
+# 如果指定了 --reset，先杀掉旧会话
+if [ "$RESET" == "--reset" ]; then
+    echo "🔥 Force resetting session '$SESSION'..."
+    tmux kill-session -t $SESSION 2>/dev/null
+fi
+
+# 核心逻辑修改：如果 Session 存在，直接连进去，绝不乱切分！
+tmux has-session -t $SESSION 2>/dev/null
+
+if [ $? == 0 ]; then
+    echo "🔄 Session '$SESSION' already exists. Attaching..."
+    tmux attach-session -t $SESSION
+    exit 0
+fi
+
+# 如果走到这里，说明 Session 不存在，开始新建
+echo "✨ Creating new session: $SESSION ($LAYOUT)"
+tmux new-session -d -s $SESSION -n "Editor"
+
+# 根据选择的布局进行切分
+if [ "$LAYOUT" == "dev" ]; then
+    # Dev 布局: 左 70% | 右 30%
+    tmux send-keys -t $SESSION:Editor "vibe ." C-m
+    # 这里的 30 是指右边新窗口占 30%
+    tmux split-window -h -t $SESSION:Editor -p 30
+    tmux send-keys -t $SESSION:Editor.1 "ls -la" C-m 
+    tmux split-window -v -t $SESSION:Editor.1 -p 50
+    tmux send-keys -t $SESSION:Editor.2 "lazygit" C-m
+    tmux select-pane -t $SESSION:Editor.0
+
+elif [ "$LAYOUT" == "debug" ]; then
+    tmux send-keys -t $SESSION:Editor "vibe ." C-m
+    tmux split-window -v -t $SESSION:Editor -p 20
+    tmux send-keys -t $SESSION:Editor.1 "htop" C-m
+    tmux select-pane -t $SESSION:Editor.0
+
+elif [ "$LAYOUT" == "zen" ]; then
+    tmux send-keys -t $SESSION:Editor "vibe ." C-m
+fi
+
+tmux attach-session -t $SESSION
