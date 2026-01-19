@@ -1,155 +1,77 @@
-# 🎹 Vibercoder 实战演练手册 (Playbook)
+# 🎹 Vibercoder 实战操作手册 (Playbook)
 
-> "No Mouse, Just Vibe. (But Mouse is okay for resizing!)"
+> "No Mouse, Just Vibe."
 
-这是一份为你量身定制的终端开发剧本。请在演练前通读一遍，然后按照步骤操作。
+这是你的日常开发指南。掌握这些工作流，效率将提升 10 倍。
 
 ---
 
-## 🎬 第一幕：开机启动 (The Launch)
+## 🚦 启动与退出
 
-1.  **全局启动**: 在任何目录下输入 `vc` (默认布局) 或 `vc debug` (调试布局)。
-2.  **手动启动**: 
+*   **启动完整 IDE**: 
     ```bash
-    ./bin/vibe-layout.sh dev --reset
+    vc         # 默认 dev 布局
+    vc debug   # 带 htop 的调试布局
     ```
-3.  **检查布局**:
-    - **左侧 (70%)**: `vibe` 代码区 (Neovim)。
-    - **右上 (15%)**: Shell (领航员驻地/运行区)。
-    - **右下 (15%)**: `lazygit` (版本管理)。
+*   **退出**:
+    *   暂时挂起 (Detach): `Ctrl+b` 然后按 `d` (稍后用 `vc` 恢复)。
+    *   彻底结束: `Ctrl+b` 然后输入 `:kill-session`。
 
 ---
 
-## 📐 第二幕：布局微调 (Layout Tuning)
+## 🎮 核心快捷键 (Cheat Sheet)
 
-**目标**：根据需要随时调整面板大小。
+### 1. 窗口导航 (无缝穿梭)
+> 无视 Vim 与 Tmux 的边界，像在同一个应用里一样移动。
 
-### 1. 鼠标操作 (最直观)
-- **Tmux 调整**: 直接用鼠标按住绿色的面板分割线，向左右或上下**拖拽**。
-- **Neovim 调整**: 如果开了 AI 侧边栏，可以用鼠标拖动编辑器与侧边栏之间的竖线。
+| 快捷键 | 动作 |
+| :--- | :--- |
+| **`Ctrl + h`** | 光标向**左**跳 (Vim Window -> Tmux Pane) |
+| **`Ctrl + j`** | 光标向**下**跳 |
+| **`Ctrl + k`** | 光标向**上**跳 |
+| **`Ctrl + l`** | 光标向**右**跳 (代码 -> 终端) |
 
-### 2. 键盘操作 (分层治理：内外有别)
+### 2. 布局调整
+*   **微调 (Vim 内)**: `Alt + h/j/k/l` (调整代码分割窗口大小)
+*   **宏调 (Tmux)**: `Ctrl+b` (松开) -> 按住 `Shift` + `H/J/K/L` (调整整个面板比例)
+*   **专注模式**: `Ctrl+b` -> `z` (当前面板最大化/恢复)
 
-- **Layer 3: 编辑器微调 (Neovim)**
-    - **目标**: 调整 AI 侧边栏、代码分割窗口。
-    - **操作**: 按住 **`Option` (Alt)** 不放，点击 **`h/j/k/l`**。
-    - *特点*: 极其灵敏，不需要前缀键，随手微调。
-
-- **Layer 2: 全局布局 (Tmux)**
-    - **目标**: 调整左侧代码区与右侧终端区的比例。
-    - **操作**: 按一下 **`Ctrl + b`** (松开)，然后连续按 **`Shift + H/J/K/L`**。
-    - *特点*: 稳重。调整的是整个工作区的宏观结构。
-
----
-
-## 🚀 第三幕：全栈开发流 (The Dev Flow)
-
-### 1. 文件导航
-- **找文件**: `<Space><Space>` (双击空格) -> 输入名 -> 回车。
-- **看目录**: 按 **`<Space>e`**。
-    - *动作*: 左侧弹出文件树 -> `j/k` 选择 -> 回车打开。
-    - *技巧*: 此时树会保留在左侧。如果想关掉它以腾出更多空间，再次按 `<Space>e`。
-- **切文件**: `Shift + h` (左) 或 `Shift + l` (右)。
-
-### 2. 窗口穿梭
-- **无缝穿越**: `Ctrl + h/j/k/l`
-    - 无视 Vim 与 Tmux 的边界，直接在代码、终端、LazyGit 面板间自由跳跃。
-    - *例如*: 在左侧写完代码，按 `Ctrl+l` 直接跳到右侧终端跑测试。
-
-### 3. Git 操作
-- **LazyGit**: 跳到右下角面板 (`Ctrl+j` / `Ctrl+l`)，在这个全功能 TUI 界面里操作。
-- **Diff 视图**: 在 Vim 内看到冲突时，按 `co` (Choose Ours) 或 `ct` (Choose Theirs)。
+### 3. 文件操作
+*   **找文件**: `<Space><Space>` (Fuzzy Find)
+*   **全局搜**: `<Space>/` (Live Grep)
+*   **文件树**: `<Space>e` (Toggle Explorer)
+*   **Git 面板**: `<Space>gg` (打开 Lazygit 悬浮窗) 或跳到右下角面板。
 
 ---
 
-## 🤖 第四幕：AI 微操 (Inside Neovim)
+## 🤖 AI 协同工作流
 
-这是你的“第二大脑”，负责代码生成和上下文补全。
+### 场景 A: 代码补全 (Copilot)
+*   当你打字时，灰色的建议会自动出现。
+*   **接受建议**: `Alt + l` (Option + l)
 
-1.  **行间补全 (Copilot)**:
-    - 看到灰色建议文字 -> 按 **`Alt + l`** 接受。
-2.  **局部对话 (Avante)**:
-    - 选中代码或在空行 -> 按 **`<Space>aa`** 召唤侧边栏。
-    - 输入指令 -> 回车。
-    - **应用建议**: 在侧边栏的代码块上按 **`A`** (Apply)，它会流式写入你的文件。
-3.  **切换大脑 (AI Switch)**:
-    - 觉得 DeepSeek 慢或者想要 Gemini 的超长上下文？
-    - 按 **`<Space>ap`** -> 选择 `Gemini` 或 `Copilot`。
+### 场景 B: 智能问答与重构 (Avante)
+*   **召唤**: 选中代码或在空行按 `<Space>aa`。
+*   **指令**: 输入 "Refactor this function to be more readable"。
+*   **应用**: AI 写完代码后，按 `A` (Apply) 直接应用到文件。
+*   **切换模型**: 觉得 DeepSeek 慢？按 `<Space>ap` 换成 Gemini。
 
----
+### 场景 C: 全局项目生成 (Aider)
+> 适合复杂的跨文件任务。
 
-## 🎭 第五幕：AI 宏操 (The Dual-Core Engine)
-
-**目标**：跨文件的复杂重构或生成新功能。这是你的“杀手锏”。
-
-### 1. 召唤领航员 (Aider)
-- 按 **`Ctrl + l`** 跳到右上角 Shell。
-- **战术选择 (根据任务难度选模型)**:
-
-    **A. 日常开发 (DeepSeek - 推荐主力)**
-    > *便宜、中文好、写代码能力极强*
-    ```bash
-    aider --model deepseek/deepseek-chat
-    ```
-
-    **B. 复杂架构/算法难题 (DeepSeek R1)**
-    > *推理核弹，适合解决死锁、性能优化。速度较慢*
-    ```bash
-    aider --model deepseek/deepseek-reasoner
-    ```
-
-    **C. 处理超长文档 (Gemini Pro)**
-    > *200万 Token 上下文，适合读整本书或分析整个架构*
-    ```bash
-    aider --model gemini/gemini-1.5-pro
-    ```
-
-### 2. 宏观指令流
-- 告诉 Aider：“帮我为 utils.py 生成全套单元测试，并修正发现的 bug。”
-- Aider 会自动读取文件、修改代码并**自动提交 Git**。
-- 回到 Vim (`Ctrl+h`)，你会发现文件内容已经自动更新。
+1. 按 `Ctrl + l` 跳到右上角终端。
+2. 运行 `aider` (确保已安装)。
+3. 输入指令: "Create a new Flask app structure with blueprints"。
+4. Aider 会直接修改文件系统。
+5. 按 `Ctrl + h` 回到 Vim，文件会自动更新。
 
 ---
 
-## 🚑 第六幕：紧急救火 (Panic Mode)
+## 🚑 紧急救火
 
-### 界面重置
-- **Vim 窗口乱了**: 按 `Ctrl+w, =` (自动等分)。
-- **Neo-tree 没了**: 按 `<Space>e`。
-- **专注模式 (Zoom)**: 
-    - Tmux 面板太小看不清？按 **`Ctrl+b` 然后 `z`** 最大化当前面板。看完再按一次 `z` 恢复。
-
-### 彻底重置 (⚠️ 危险操作)
-如果环境彻底卡死：
-1. `qa` (保存退出 Vim)。
-2. `vc dev --reset` (强制杀掉会话并重启)。
+*   **Vim 卡死**: 尝试 `Ctrl + c` 或 `Esc`。如果不行，`Ctrl + z` 挂起，然后 `kill %1`。
+*   **图标乱码**: 检查你的终端 App 字体是否设为 Nerd Font。
+*   **找不到命令**: 运行 `source ~/.zshrc`。
 
 ---
-
-## 🏁 第七幕：优雅下班 (Shutdown)
-
-- **保留现场**: `Ctrl + b` 然后 `d` (下次来运行 `vc` 或 `./bin/vibe-layout.sh dev` 瞬间恢复)。
-- **彻底结束**: 
-    - `tmux kill-session -t vibe-xxxx`。
-
----
-
-## ⚡️ 附录：快捷键速查 (Cheat Sheet)
-
-| 场景 | 快捷键 | 作用 |
-| :--- | :--- | :--- |
-| **导航** | `Ctrl + h/j/k/l` | 跨窗口/面板移动 |
-| | `<Space><Space>` | 搜索文件 |
-| | `<Space>/` | 全局搜索内容 |
-| **AI** | `<Space>aa` | 打开 AI 侧边栏 |
-| | `<Space>ap` | 切换 AI 模型 |
-| | `Alt + l` | 接受 Copilot 补全 |
-| **编辑** | `Ctrl + s` | 保存文件 |
-| | `<Space>bd` | 关闭当前 Buffer |
-| **Tmux** | `Ctrl+b, d` | 暂时离开 (Detach) |
-| | `Ctrl+b, z` | 最大化/恢复面板 |
-| | `Ctrl+b, %` | 左右切分 |
-| | `Ctrl+b, "` | 上下切分 |
-
----
-*Generated by Gemini CLI for Vibercoder*
+*Generated by Gemini CLI*

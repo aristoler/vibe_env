@@ -1,81 +1,81 @@
-# 🛠️ Vibe 环境配置备忘录 (Config Memo)
+# 🛠️ Vibe 配置架构备忘录 (Config Memo)
 
-> 本文档供系统维护者或高级用户参考，记录了环境的底层配置逻辑、文件路径和关键参数。
-> 日常开发请参考 `VIBERCODER_PLAYBOOK.md`。
+> 本文档面向系统维护者，解析 Vibe 环境的底层配置逻辑与扩展方式。
 
 ---
 
-## 1. 目录结构 (Directory Structure)
+## 1. 核心设计理念
 
-Vibe 环境利用 Neovim 的 `NVIM_APPNAME` 特性实现了与系统环境的完全隔离。
+### 1.1 隔离性 (Isolation)
+Vibe 利用 Neovim 的 `NVIM_APPNAME` 环境变量实现完全隔离。
+*   **启动命令**: `NVIM_APPNAME=vibe nvim` (封装在 `bin/vibe` 中)
+*   **优势**: 不会干扰你本机默认的 `~/.config/nvim` 配置，可与原有 Vim 共存。
 
-| 类别 | 路径 | 说明 |
+### 1.2 目录映射
+运行 `./setup.sh` 后，系统路径与仓库路径建立如下软链接：
+
+| 系统路径 | 仓库源路径 | 作用 |
 | :--- | :--- | :--- |
-| **配置根目录** | `~/.config/vibe/` | Lua 脚本、插件配置、键位映射 |
-| **插件/数据** | `~/.local/share/vibe/` | Lazy.nvim 插件源码、Mason 安装的工具 |
-| **状态信息** | `~/.local/state/vibe/` | 历史记录、日志、Shada 文件 |
-| **缓存文件** | `~/.cache/vibe/` | 临时编译文件、交换文件 |
+| `~/.config/vibe` | `./config/nvim` | Neovim 核心配置 |
+| `~/.tmux.conf` | `./config/tmux/tmux.conf` | Tmux 配置文件 |
+| `~/.local/bin/vibe` | `./bin/vibe` | 编辑器启动脚本 |
+| `~/.local/bin/vc` | `./bin/vibe-layout.sh` | IDE 布局启动脚本 |
 
 ---
 
-## 2. 关键配置文件 (Key Config Files)
+## 2. 插件体系 (LazyVim)
 
-### 2.1 核心入口
-- **`~/.config/vibe/init.lua`**: 加载 LazyVim 框架。
-- **`~/.config/vibe/lua/config/keymaps.lua`**: 自定义快捷键（如 `<M-h>` 窗口调整）。
-- **`~/.config/vibe/lua/config/options.lua`**: 基础 Vim 选项。
+基于 [LazyVim](https://www.lazyvim.org/) 框架构建。
 
-### 2.2 AI 引擎配置 (Avante)
-- **文件**: `~/.config/vibe/lua/plugins/avante.lua`
-- **当前 Providers**:
-    - `openai` (Mapped to **DeepSeek**): 主力模型 `deepseek-chat`。
-    - `gemini` (**Gemini 1.5 Pro**): 备用模型，适合长文本 (继承自 openai)。
-    - `copilot`: 用于行间自动补全 (Auto Suggestions)。
-
-### 2.3 终端集成 (Tmux)
-- **文件**: `~/.tmux.conf` (如果你使用系统级配置) 或 `~/.config/tmux/tmux.conf`。
-- **导航插件**: `~/.config/vibe/lua/plugins/tmux_nav.lua`
-    - 实现了 `Ctrl+h/j/k/l` 在 Vim 分割窗口和 Tmux 面板间的无缝跳转。
-
----
-
-## 3. 自动化脚本 (Automation Scripts)
-
-### `vibe-layout.sh`
-- **位置**: `bin/vibe-layout.sh`
-- **作用**: 一键启动/重置 Tmux 开发环境。
-- **逻辑**:
-    1. 检测当前目录名作为 Session ID。
-    2. 创建 `Editor` 窗口。
-    3. 根据布局参数 (`dev`, `debug`, `zen`) 发送 `split-window` 指令。
-
-### `.zshrc` 全局入口
-```bash
-vc() {
-    bash "$HOME/GitHere/termPower/bin/vibe-layout.sh" "$@"
-}
+### 2.1 关键文件结构
+```text
+config/nvim/lua/
+├── config/
+│   ├── keymaps.lua    # 自定义快捷键
+│   ├── options.lua    # Vim 基础选项 (行号, 缩进等)
+│   └── autocmds.lua   # 自动命令
+└── plugins/
+    ├── avante.lua     # AI 助手 (DeepSeek/Gemini)
+    ├── tmux_nav.lua   # Vim-Tmux 导航集成
+    ├── example.lua    # 用户自定义插件示例
+    └── ...
 ```
 
----
-
-## 4. 维护与重置 (Maintenance)
-
-### 强制重装环境
-如果你想彻底从头开始，请执行以下命令（⚠️ 会删除所有 Vibe 配置和插件）：
-
-```bash
-# 1. 备份现有配置 (可选)
-mv ~/.config/vibe ~/.config/vibe.bak
-
-# 2. 清理所有残留
-rm -rf ~/.local/share/vibe
-rm -rf ~/.local/state/vibe
-rm -rf ~/.cache/vibe
-
-# 3. 重新克隆 LazyVim 模板
-git clone https://github.com/LazyVim/starter ~/.config/vibe
-rm -rf ~/.config/vibe/.git
-```
+### 2.2 如何添加新插件
+1. 在 `lua/plugins/` 下新建一个 `.lua` 文件（如 `python.lua`）。
+2. 返回标准的 Lazy.nvim 插件表：
+   ```lua
+   return {
+     { "plugin-author/plugin-name", opts = { ... } },
+   }
+   ```
+3. 重启 Vibe，插件会自动安装。
 
 ---
-*Last Updated: 2026-01-19 by Gemini CLI*
+
+## 3. AI 模块详解
+
+### 3.1 Avante.nvim
+位于 `lua/plugins/avante.lua`。
+*   **Provider**: 默认为 `openai` (映射到 DeepSeek)。
+*   **Gemini**: 作为备用 Provider，配置在 `gemini` 字段下。
+*   **切换**: 使用 `<Leader>ap` 快捷键在模型间热切换。
+
+### 3.2 密钥管理
+出于安全考虑，API Key **绝不** 硬编码在 Lua 文件中。
+*   机制：插件读取环境变量 `OPENAI_API_KEY` 或 `GEMINI_API_KEY`。
+*   来源：由 `~/.vibe_secrets` 文件提供 (在 `.zshrc` 中加载)。
+
+---
+
+## 4. 自动化脚本原理
+
+### `install_deps.sh`
+*   智能检测 OS (Linux/Darwin)。
+*   在 Linux 上优先下载 AppImage 或预编译 Tarball 到 `~/.local/bin`。
+*   解决系统源软件版本过旧的问题。
+
+### `setup.sh`
+*   幂等性设计：可重复运行。
+*   自动修复失效的软链接。
+*   检测 `~/.vibe_secrets` 是否存在并提供模板。
