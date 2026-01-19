@@ -11,6 +11,13 @@ TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 echo "🚀 Starting Vibe Environment Setup..."
 echo "📂 Repo Root: $REPO_ROOT"
 
+# --- 0. 依赖检查提示 ---
+if ! command -v nvim &> /dev/null; then
+    echo "⚠️  [Warning] Neovim not found!"
+    echo "   You can run './install_deps.sh' to try installing dependencies automatically."
+    echo ""
+fi
+
 # --- 辅助函数：智能软链接 ---
 link_file() {
     local source_path="$1"
