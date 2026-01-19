@@ -5,7 +5,7 @@ return {
   opts = {
     -- 1. 指定默认 Provider
     provider = "openai",
-    auto_suggestions_provider = "copilot",
+    -- auto_suggestions_provider = "copilot",
     
     -- 2. 所有模型配置必须放在 'providers' 表中 (不再是 vendors)
     providers = {
