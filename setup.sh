@@ -65,7 +65,11 @@ link_file "$REPO_ROOT/bin/vibe" "$HOME/.local/bin/vibe"
 link_file "$REPO_ROOT/bin/vibe-layout.sh" "$HOME/.local/bin/vc"
 chmod +x "$REPO_ROOT/bin/vibe" "$REPO_ROOT/bin/vibe-layout.sh"
 
-# --- 4. 检查 API 密钥配置 ---
+# --- 4. 部署 Shell 集成脚本 ---
+echo "🐚 Configuring Shell Integration..."
+link_file "$REPO_ROOT/bin/vibe-init.sh" "$HOME/.vibe_init.sh"
+
+# --- 5. 检查 API 密钥配置 ---
 echo "🔑 Checking Secrets..."
 SECRETS_FILE="$HOME/.vibe_secrets"
 if [ ! -f "$SECRETS_FILE" ]; then
@@ -76,16 +80,14 @@ else
     echo "  ✅ [OK] Secrets file exists at $SECRETS_FILE"
 fi
 
-# --- 5. 完成 ---
+# --- 6. 完成 ---
 echo ""
 echo "✨ Vibe Environment setup complete!"
 echo ""
-echo "👉 FINAL STEP: Ensure your shell loads the secrets."
-echo "   Add these lines to your ~/.zshrc if not already present:"
+echo "👉 FINAL STEP: ONE-LINE CONFIGURATION"
+echo "   Add the following SINGLE LINE to your ~/.zshrc (or ~/.bashrc):"
 echo ""
-echo "   # Load Vibe Secrets (AI Keys)"
-echo "   if [ -f \"\$HOME/.vibe_secrets\" ]; then"
-echo "       source \"\$HOME/.vibe_secrets\""
-echo "   fi"
+echo "   [ -f ~/.vibe_init.sh ] && source ~/.vibe_init.sh"
 echo ""
+echo "   (This handles PATH, API Keys, Zoxide, FZF, and Aliases automatically)"
 echo "✅ Done."
