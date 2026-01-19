@@ -37,30 +37,30 @@ sleep 0.5 # 给 Tmux 一点启动时间
 # 根据选择的布局进行切分
 if [ "$LAYOUT" == "dev" ]; then
     # Dev 布局: 左 70% | 右 30%
-    # 注意: 由于 tmux.conf 设置了 pane-base-index 1，现在第一个面板是 .1
+    # 恢复 0-indexed 逻辑
     tmux send-keys -t $SESSION:Editor "vibe ." C-m
     
-    # 切分出右侧面板 (.2)
+    # 切分出右侧面板 (.1)
     tmux split-window -h -t $SESSION:Editor -l 30%
     sleep 0.1
-    tmux send-keys -t $SESSION:Editor.2 "ls -la" C-m 
+    tmux send-keys -t $SESSION:Editor.1 "ls -la" C-m 
     
-    # 切分出右下角面板 (.3)
-    tmux split-window -v -t $SESSION:Editor.2 -l 50%
+    # 切分出右下角面板 (.2)
+    tmux split-window -v -t $SESSION:Editor.1 -l 50%
     sleep 0.1
-    tmux send-keys -t $SESSION:Editor.3 "lazygit" C-m
+    tmux send-keys -t $SESSION:Editor.2 "lazygit" C-m
     
-    # 回到左侧主编辑器 (.1)
-    tmux select-pane -t $SESSION:Editor.1
+    # 回到左侧主编辑器 (.0)
+    tmux select-pane -t $SESSION:Editor.0
 
 elif [ "$LAYOUT" == "debug" ]; then
     tmux send-keys -t $SESSION:Editor "vibe ." C-m
     tmux split-window -v -t $SESSION:Editor -l 20%
     sleep 0.1
-    # 新面板是 .2
-    tmux send-keys -t $SESSION:Editor.2 "htop" C-m
-    # 回到 .1
-    tmux select-pane -t $SESSION:Editor.1
+    # 新面板是 .1
+    tmux send-keys -t $SESSION:Editor.1 "htop" C-m
+    # 回到 .0
+    tmux select-pane -t $SESSION:Editor.0
 
 elif [ "$LAYOUT" == "zen" ]; then
     tmux send-keys -t $SESSION:Editor "vibe ." C-m
