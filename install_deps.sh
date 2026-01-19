@@ -122,7 +122,11 @@ install_lazygit() {
 check_tools() {
     MISSING=""
     if ! command -v rg &> /dev/null; then MISSING="$MISSING ripgrep"; fi
-    if ! command -v fd &> /dev/null; then MISSING="$MISSING fd-find"; fi
+    
+    # Check for 'fd' OR 'fdfind' (Ubuntu/Debian rename)
+    if ! command -v fd &> /dev/null && ! command -v fdfind &> /dev/null; then 
+        MISSING="$MISSING fd-find"; 
+    fi
     
     if [ -n "$MISSING" ]; then
         echo_warn "Missing suggested tools:$MISSING"
