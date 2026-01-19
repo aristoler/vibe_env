@@ -35,7 +35,7 @@ echo_info "Detected OS: $OS, Arch: $ARCH"
 if [ "$ARCH" = "x86_64" ]; then
     NVIM_ARCH="linux64"
     LAZYGIT_ARCH="x86_64"
-elif [ "$ARCH" = "aarch64" ]; then
+elif [ "$ARCH" = "aarch64" ] || [ "$ARCH" = "arm64" ]; then
     NVIM_ARCH="linux-arm64"
     LAZYGIT_ARCH="arm64"
 else
