@@ -172,10 +172,43 @@ install_shell_tools() {
     fi
 }
 
+# --- 5. Install Yazi (Modern File Manager) ---
+install_yazi() {
+    if command -v yazi &> /dev/null && [ "$FORCE_UPGRADE" = false ]; then
+        echo_info "yazi is already installed."
+        return
+    fi
+
+    echo_info "Installing Yazi..."
+    if [ "$OS" = "Linux" ]; then
+        # 映射 Yazi 的架构名
+        YAZI_ARCH=""
+        if [ "$ARCH" = "x86_64" ]; then YAZI_ARCH="x86_64-unknown-linux-musl"; 
+        elif [ "$ARCH" = "aarch64" ]; then YAZI_ARCH="aarch64-unknown-linux-musl"; fi
+        
+        if [ -n "$YAZI_ARCH" ]; then
+            YAZI_VER=$(curl -s "https://api.github.com/repos/sxyazi/yazi/releases/latest" | grep -Po '"tag_name": "\K[^"]*')
+            URL="https://github.com/sxyazi/yazi/releases/latest/download/yazi-${YAZI_ARCH}.zip"
+            echo_info "Downloading Yazi $YAZI_VER for $YAZI_ARCH..."
+            curl -Lo yazi.zip "$URL"
+            unzip -q yazi.zip
+            mv "yazi-${YAZI_ARCH}/yazi" "$INSTALL_BIN/"
+            mv "yazi-${YAZI_ARCH}/ya" "$INSTALL_BIN/"
+            rm -rf yazi.zip "yazi-${YAZI_ARCH}"
+            echo_info "Yazi installed to $INSTALL_BIN"
+        fi
+    elif [ "$OS" = "Darwin" ]; then
+        if command -v brew &> /dev/null; then
+            brew upgrade yazi || brew install yazi
+        fi
+    fi
+}
+
 # --- Main ---
 install_nvim
 install_lazygit
 install_shell_tools
+install_yazi
 check_tools
 
 echo ""
@@ -184,3 +217,4 @@ echo "      $INSTALL_BIN/nvim --version"
 echo_info "NOTE: To enable zoxide/fzf, add the following to your .bashrc/.zshrc:"
 echo '      eval "$(zoxide init bash)"  # or zsh'
 echo '      [ -f ~/.fzf.bash ] && source ~/.fzf.bash'
+echo_info "Yazi keymap: You can now run 'y' (if aliased) or 'yazi' to browse files."
