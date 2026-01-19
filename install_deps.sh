@@ -204,11 +204,24 @@ install_yazi() {
     fi
 }
 
+# --- 6. Install TPM (Tmux Plugin Manager) ---
+install_tpm() {
+    TPM_DIR="$HOME/.tmux/plugins/tpm"
+    if [ -d "$TPM_DIR" ]; then
+        echo_info "TPM (Tmux Plugin Manager) is already installed."
+    else
+        echo_info "Installing TPM..."
+        git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
+        echo_info "TPM installed."
+    fi
+}
+
 # --- Main ---
 install_nvim
 install_lazygit
 install_shell_tools
 install_yazi
+install_tpm
 check_tools
 
 echo ""
