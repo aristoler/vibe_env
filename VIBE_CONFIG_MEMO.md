@@ -48,3 +48,15 @@
 基于 [LazyVim](https://www.lazyvim.org/) 框架。
 *   **AI 模块**: `lua/plugins/avante.lua` (默认禁用 Copilot 侧边栏补全以防崩溃)。
 *   **Tmux 导航**: `lua/plugins/tmux_nav.lua` 实现 Ctrl+h/j/k/l 无缝跳转。
+
+---
+
+## 5. Tmux 插件体系 (TPM)
+
+使用 [TPM (Tmux Plugin Manager)](https://github.com/tmux-plugins/tpm) 管理扩展。
+*   **安装位置**: `~/.tmux/plugins/`
+*   **配置文件**: `config/tmux/tmux.conf` 末尾。
+*   **已装插件**:
+    *   `tmux-sensible`: 基础合理配置。
+    *   `tmux-resurrect`: 会话持久化 (Save/Restore)。
+*   **安装命令**: 进入 Tmux 后按 `Ctrl+b` + `I` (Shift+i)。
