@@ -1,0 +1,14 @@
+# Secrets
+.vibe_secrets
+*.key
+*.token
+
+# System
+.DS_Store
+*.swp
+*.swo
+
+# Logs & Temp
+*.log
+tmp/
+.lazy/
