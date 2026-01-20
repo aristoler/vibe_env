@@ -364,3 +364,9 @@ if [ "$INSTALL_FONTS" = false ] && [ "$OS" = "Linux" ]; then
     echo_warn "NOTE: Nerd Fonts were NOT installed by this script. For proper UI display (icons), please ensure you have a Nerd Font (e.g., JetBrainsMono Nerd Font) installed on your LOCAL machine and configured in your terminal emulator (e.g., Kitty). If you wish to install it via this script, run './install_deps.sh --install-fonts'."
 
 fi
+
+# Add a reminder for TPM plugin installation
+if command -v tmux &> /dev/null; then
+    echo_info "TMUX USERS: To install tmux plugins (like session saving), start tmux and press 'prefix + I' (Shift + i)."
+fi
+
