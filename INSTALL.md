@@ -34,6 +34,16 @@ cd vibe_env
 > *   初始化 FZF (模糊搜索)
 > *   设置别名 (如 `y` -> `yazi`)
 
+### 4. 安装 Tmux 插件 (如 `tmux-resurrect`)
+
+在首次启动 Tmux 后，请执行以下操作来安装所有配置文件中声明的插件（例如 `tmux-resurrect`）：
+
+1.  **启动一个 Tmux 会话**。
+2.  按下 `prefix` (默认通常是 `Ctrl+b` 或 `Ctrl+a`)。
+3.  松开 `prefix` 后，立即按下大写 `I` (`Shift + i`)。
+
+这会触发 TPM 下载并安装所有插件。安装成功后，如会话保存功能 (`prefix + Ctrl+s`) 等将正常工作。
+
 ---
 
 ## 📋 依赖清单 (Dependencies)
