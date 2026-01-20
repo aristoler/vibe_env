@@ -1,14 +1,35 @@
 #!/bin/bash
-# Vibe Dependencies Installer (v1.2)
-# Fixes: ARM64 support, robust arch detection
-# Usage: ./install_deps.sh [--upgrade]
+# Vibe Dependencies Installer (v1.3)
+# Fixes: ARM64 support, robust arch detection, optional font installation
+# Usage: ./install_deps.sh [--upgrade] [--install-fonts]
 
 set -e
 
+# --- Argument Parsing ---
 FORCE_UPGRADE=false
-if [[ "$1" == "--upgrade" || "$1" == "-u" ]]; then
-    FORCE_UPGRADE=true
+INSTALL_FONTS=false
+
+# Parse arguments
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -u|--upgrade)
+            FORCE_UPGRADE=true
+            ;;
+        --install-fonts)
+            INSTALL_FONTS=true
+            ;;
+        *)
+            echo_warn "Unknown option: $1"
+            ;;
+    esac
+    shift
+done
+
+if [ "$FORCE_UPGRADE" = true ]; then
     echo "🔄 Upgrade mode enabled: Will force reinstall tools."
+fi
+if [ "$INSTALL_FONTS" = true ]; then
+    echo "🖋️ Font installation enabled."
 fi
 
 # 目录准备
@@ -216,19 +237,130 @@ install_tpm() {
     fi
 }
 
+
+
+# --- 7. Install Nerd Font for UI ---
+
+install_nerd_font() {
+
+    if [ "$OS" = "Linux" ]; then
+
+        echo_info "Installing JetBrainsMono Nerd Font for better UI icons..."
+
+        FONT_DIR="$HOME/.local/share/fonts"
+
+        mkdir -p "$FONT_DIR"
+
+
+
+        # Check if font is already installed to avoid re-downloading
+
+        # A simple check for one of the font files
+
+        if [ -f "$FONT_DIR/JetBrainsMonoNerdFont-Regular.ttf" ] && [ "$FORCE_UPGRADE" = false ]; then
+
+            echo_info "JetBrainsMono Nerd Font already seems to be installed."
+
+            # Also ensure font cache is up-to-date
+
+            if command -v fc-cache &> /dev/null; then
+
+                fc-cache -f >/dev/null 2>&1
+
+            fi
+
+            return
+
+        fi
+
+        
+
+        FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.2.1/JetBrainsMono.zip"
+
+        echo_info "Downloading JetBrainsMono Nerd Font from $FONT_URL"
+
+        curl -L "$FONT_URL" -o "/tmp/JetBrainsMono.zip"
+
+
+
+        echo_info "Extracting to $FONT_DIR..."
+
+        unzip -o "/tmp/JetBrainsMono.zip" -d "$FONT_DIR"
+
+        
+
+        # Clean up downloaded file
+
+        rm "/tmp/JetBrainsMono.zip"
+
+
+
+        # Update font cache
+
+        if command -v fc-cache &> /dev/null; then
+
+            echo_info "Updating font cache..."
+
+            fc-cache -fv > /dev/null 2>&1
+
+        else
+
+            echo_warn "fc-cache command not found. Please manually update your font cache."
+
+        fi
+
+        echo_info "JetBrainsMono Nerd Font installed successfully."
+
+        echo_warn "IMPORTANT: Please set 'JetBrainsMono Nerd Font' as your terminal's font."
+
+    else
+
+        echo_info "Skipping Nerd Font installation on non-Linux OS. Please install 'JetBrainsMono Nerd Font' manually."
+
+    fi
+
+}
+
+
+
 # --- Main ---
+
 install_nvim
+
 install_lazygit
+
 install_shell_tools
+
 install_yazi
+
 install_tpm
+
+if [ "$INSTALL_FONTS" = true ]; then
+    install_nerd_font
+fi
+
 check_tools
 
+
+
 echo ""
+
 echo_info "Done! Please verify installation by running:"
+
 echo "      $INSTALL_BIN/nvim --version"
+
 echo_info "FINAL STEP: Activate all tools with ONE line."
+
 echo "      Add this to your ~/.bashrc or ~/.zshrc:"
+
 echo "      [ -f ~/.vibe_init.sh ] && source ~/.vibe_init.sh"
+
 echo ""
+
 echo_info "Yazi keymap: You can now run 'y' (if aliased) or 'yazi' to browse files."
+
+if [ "$INSTALL_FONTS" = false ] && [ "$OS" = "Linux" ]; then
+
+    echo_warn "NOTE: Nerd Fonts were NOT installed by this script. For proper UI display (icons), please ensure you have a Nerd Font (e.g., JetBrainsMono Nerd Font) installed on your LOCAL machine and configured in your terminal emulator (e.g., Kitty). If you wish to install it via this script, run './install_deps.sh --install-fonts'."
+
+fi
