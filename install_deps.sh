@@ -175,7 +175,7 @@ install_shell_tools() {
             cd "$FZF_DIR" && git pull && ./install --bin --no-update-rc
         else
             git clone --depth 1 https://github.com/junegunn/fzf.git "$FZF_DIR"
-            "$FZF_DIR/install" --bin --no-update-rc --no-completion --no-key-bindings
+            "$FZF_DIR/install" --all
         fi
         # Link binary
         ln -sf "$FZF_DIR/bin/fzf" "$INSTALL_BIN/fzf"
