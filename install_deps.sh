@@ -60,10 +60,10 @@ install_nvim() {
 
         if [ "$ARCH" = "x86_64" ]; then
             # x86: 使用 AppImage (最简单)
-            echo_info "Downloading nvim.appimage (x86_64)..."
-            curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-            chmod u+x nvim.appimage
-            mv nvim.appimage "$INSTALL_BIN/nvim"
+            echo_info "Downloading nvim-linux-x86_64.appimage (x86_64)..."
+            curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.appimage
+            chmod u+x nvim-linux-x86_64.appimage
+            mv nvim-linux-x86_64.appimage "$INSTALL_BIN/nvim"
         else
             # ARM64: 使用 Tarball (官方无 ARM AppImage)
             echo_info "Downloading nvim-$NVIM_ARCH.tar.gz..."
