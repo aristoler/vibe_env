@@ -1,0 +1,85 @@
+# ==============================================================================
+# 🐱 Kitty Terminal - Recommended Configuration for Vibe Environment
+# ==============================================================================
+#
+# Usage:
+# 1. Copy this file to your kitty config directory:
+#    cp config/kitty/kitty.conf.example ~/.config/kitty/kitty.conf
+# 2. Restart Kitty terminal.
+#
+# For more options, see: https://sw.kovidgoyal.net/kitty/conf/
+
+# --- 1. Font Settings ---
+# Main font for English and Nerd Font icons.
+font_family      JetBrainsMono Nerd Font
+bold_font        auto
+italic_font      auto
+bold_italic_font auto
+
+# Specify Sarasa Term SC as a fallback for CJK characters using symbol_map.
+# This ensures Nerd Font icons are always rendered by the main font.
+# You need to install Sarasa Gothic SC Nerd Font on your system for this to work.
+symbol_map U+4E00-U+9FFF,U+3040-U+309F,U+30A0-U+30FF Sarasa Term SC
+
+# Adjust font size to your preference.
+font_size 13.0
+
+
+# --- 2. Theme & Colors ---
+# We recommend using a theme that matches your Neovim colorscheme (Tokyo Night).
+# The theme definition is in config/kitty/themes/tokyo_night.conf
+include themes/tokyo_night.conf
+
+
+# --- 3. Cursor ---
+# Customize cursor appearance.
+cursor_shape     block
+cursor_blink_interval 0.5
+cursor_stop_blinking_after 15.0
+
+
+# --- 4. Window Layout & Padding ---
+# Set margins and padding for the window content.
+window_padding_width 10
+window_margin_width  5
+inactive_text_alpha  0.8
+
+# Hide window title bar for a minimal look (optional).
+# hide_window_decorations yes
+
+
+# --- 5. Performance & Behavior ---
+# Scrollback buffer size (number of lines).
+scrollback_lines 10000
+
+# Enable audio bell (e.g., for terminal notifications).
+enable_audio_bell no
+
+# Allow remote control from other processes.
+allow_remote_control yes
+
+
+# --- 6. Key Mappings ---
+# Useful shortcuts for managing tabs and windows.
+
+# Create new tab
+map ctrl+shift+t new_tab_with_cwd
+
+# Close tab
+map ctrl+shift+w close_tab
+
+# Switch tabs
+map ctrl+shift+right next_tab
+map ctrl+shift+left  previous_tab
+
+# Create new split (window)
+map ctrl+shift+enter new_window_with_cwd
+map ctrl+shift+d     new_window_with_cwd --direction=horizontal
+
+# Switch splits
+map ctrl+shift+h neighboring_window left
+map ctrl+shift+l neighboring_window right
+map ctrl+shift+k neighboring_window up
+map ctrl+shift+j neighboring_window down
+
+# --- End of Configuration ---

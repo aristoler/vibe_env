@@ -1,0 +1,107 @@
+-- ==============================================================================
+-- 🚀 WezTerm - Recommended Configuration for Vibe Environment
+-- ==============================================================================
+--
+-- Usage:
+-- 1. Copy this file to your WezTerm config directory:
+--    cp config/wezterm/wezterm.lua.example ~/.wezterm.lua
+-- 2. Restart WezTerm terminal.
+--
+-- For more options, see: https://wezfurlong.org/wezterm/config/lua/index.html
+
+local wezterm = require 'wezterm'
+local config = {}
+
+-- --- 1. Font Settings ---
+-- Main font for English and Nerd Font icons.
+-- WezTerm automatically handles font fallback for CJK characters if multiple fonts are specified.
+-- Ensure JetBrainsMono Nerd Font and Sarasa Term SC are installed on your system.
+config.font = wezterm.font_with_fallback({
+  'JetBrainsMono Nerd Font',
+  'Sarasa Term SC',
+})
+config.font_size = 13.0
+
+-- You can further customize font weights for bold/italic if needed.
+-- config.bold_font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold" })
+-- config.italic_font = wezterm.font("JetBrainsMono Nerd Font", { italic = true })
+-- config.bold_italic_font = wezterm.font("JetBrainsMono Nerd Font", { weight = "Bold", italic = true })
+
+
+-- --- 2. Theme & Colors ---
+-- Tokyo Night is a great choice for LazyVim's default.
+-- WezTerm has built-in themes.
+config.color_scheme = "Tokyo Night"
+
+
+-- --- 3. Cursor ---
+config.default_cursor_style = "SteadyBlock"
+config.cursor_blink_rate = 500 -- milliseconds
+-- config.cursor_thickness = 2 -- pixels
+
+
+-- --- 4. Window Layout & Padding ---
+-- Set margins and padding for the window content.
+config.window_padding = {
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
+config.pane_border_status = "StatusAndUserVars" -- Show status line for panes
+config.window_frame = {
+  active_titlebar_bg = "#24283b",
+  inactive_titlebar_bg = "#1a1b26",
+}
+config.hide_tab_bar_if_only_one_tab = true -- Hide tab bar when only one tab
+
+
+-- --- 5. Performance & Behavior ---
+config.scrollback_lines = 10000 -- Scrollback buffer size
+config.enable_scroll_bar = false -- Disable scroll bar for a cleaner look
+config.native_macos_fullscreen_mode = true -- Use native macOS fullscreen
+config.use_fancy_tab_bar = true -- Nicer looking tab bar
+
+-- Automatically set the window name from the title
+config.tab_bar_at_bottom = false
+config.show_tab_navigator_buttons = false
+
+
+-- --- 6. Key Mappings ---
+-- WezTerm has its own key mapping system, often more flexible than Kitty's.
+-- These are just a few examples.
+config.keys = {
+  -- New tab
+  { key = "t", mods = "CTRL|SHIFT", action = wezterm.action.SpawnTab("CurrentPaneDomain") },
+  -- Close tab
+  { key = "w", mods = "CTRL|SHIFT", action = wezterm.action.CloseCurrentTab{} },
+  -- Next/Previous tab
+  { key = "RightArrow", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTabRelative(1) },
+  { key = "LeftArrow", mods = "CTRL|SHIFT", action = wezterm.action.ActivateTabRelative(-1) },
+  -- New pane (split)
+  { key = "Enter", mods = "CTRL|SHIFT", action = wezterm.action.SplitPane({ direction = "Bottom" }) },
+  { key = "d", mods = "CTRL|SHIFT", action = wezterm.action.SplitPane({ direction = "Right" }) },
+  -- Navigate panes
+  { key = "h", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Left") },
+  { key = "j", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Down") },
+  { key = "k", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Up") },
+  { key = "l", mods = "CTRL|SHIFT", action = wezterm.action.ActivatePaneDirection("Right") },
+}
+
+-- --- 7. Tmux Integration (Optional, if you still want to use tmux) ---
+-- If you attach to a tmux session, wezterm can "adopt" its panes.
+-- config.launch_menu = {
+--   { label = "Attach to tmux", args = { "tmux", "attach" } },
+--   { label = "New tmux session", args = { "tmux", "new" } },
+-- }
+
+-- --- 8. Tab Title Customization ---
+wezterm.on("format-tab-title", function(tab, tabs, panes, config)
+  local title = tab.active_pane.title
+  local index = tab.tab_index + 1
+  return string.format("%d: %s", index, title)
+end)
+
+
+-- Return the configuration table
+return config
