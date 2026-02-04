@@ -13,6 +13,7 @@ usage() {
     echo "  -l | list            列出所有会话"
     echo "  -r | resume [name]   恢复指定会话 (为空则交互式选择)"
     echo "  -d | delete <name>   删除指定会话"
+    echo "  -t | title <name>    设置当前 Tab 标题"
     echo ""
     list_sessions 
     exit 1
@@ -76,12 +77,24 @@ delete_session() {
     fi
 }
 
+# 设置当前 Tab 标题
+set_tab_title() {
+    local name=$1
+    if [[ -z "$name" ]]; then
+        echo "错误: 请提供一个标题名称。"
+        exit 1
+    fi
+    # 使用 kitty @ set-tab-title 命令来设置当前 Tab 标题
+    kitty @ set-tab-title "$name" 
+}
+
 # --- 主逻辑 ---
 case "$1" in
     save|-s)    save_session "$2" ;;
     list|-l)    list_sessions ;;
     resume|-r)  resume_session "$2" ;;
     delete|-d)  delete_session "$2" ;;
+    title|-t)   set_tab_title "$2" ;;
     *)          usage ;; 
 esac
 
