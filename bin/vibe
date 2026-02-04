@@ -1,6 +1,0 @@
-#!/bin/bash
-# 显式定义 Vibe 环境的启动入口
-# 这样就不依赖 .zshrc 中的 alias 了
-
-export NVIM_APPNAME="vibe"
-exec nvim "$@"

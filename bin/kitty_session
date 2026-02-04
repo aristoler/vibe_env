@@ -1,0 +1,87 @@
+#!/bin/zsh
+# 文件: ~/.local/bin/ks
+
+SESSION_DIR="$HOME/.config/kitty/sessions"
+
+mkdir -p "$SESSION_DIR" # 确保目录存在
+
+# 帮助信息和列表会话
+usage() {
+    echo "  kitty session管理, 用法: ks [action] [会话名]"
+    echo ""
+    echo "  -s | save <name>     保存当前会话"
+    echo "  -l | list            列出所有会话"
+    echo "  -r | resume [name]   恢复指定会话 (为空则交互式选择)"
+    echo "  -d | delete <name>   删除指定会话"
+    echo ""
+    list_sessions 
+    exit 1
+}
+
+# --- 功能实现 ---
+
+save_session() {
+    local name=$1
+    if [[ -z "$name" ]]; then
+        echo "错误: 请提供一个会话名称。"
+        exit 1
+    fi
+    # 确保 kitty 允许远程控制，否则 ls 会失败
+    kitty @ ls > "$SESSION_DIR/$name.conf"
+    echo "会话 '$name' 已保存。"
+}
+
+list_sessions() {
+    echo "可用会话:"
+    find "$SESSION_DIR" -maxdepth 1 -name '*.conf' -exec basename {} \; | sed 's/\.conf$//' | while read session; do
+        echo "  - $session"
+    done
+    if [[ -z "$(find "$SESSION_DIR" -maxdepth 1 -name '*.conf' -print -quit)" ]]; then
+        echo "  (暂无会话)"
+    fi
+}
+
+resume_session() {
+    local name=$1
+    if [[ -z "$name" ]]; then
+        list_sessions
+        echo -n "请输入要恢复的会话名: "
+        read name
+    fi
+
+    local session_file="$SESSION_DIR/$name.conf"
+    if [[ -f "$session_file" ]]; then
+        echo "正在恢复会话 '$name'..."
+        cat "$session_file" | kitty @ launch --stdin-fd 0
+        echo "会话已恢复。"
+    else
+        echo "错误: 找不到会话文件 '$session_file'。"
+        exit 1
+    fi
+}
+
+delete_session() {
+    local name=$1
+    if [[ -z "$name" ]]; then
+        echo "错误: 请提供一个要删除的会话名称。"
+        exit 1
+    fi
+    local session_file="$SESSION_DIR/$name.conf"
+    if [[ -f "$session_file" ]]; then
+        rm "$session_file"
+        echo "会话 '$name' 已删除。"
+    else
+        echo "错误: 找不到会话文件 '$session_file'。"
+        exit 1
+    fi
+}
+
+# --- 主逻辑 ---
+case "$1" in
+    save|-s)    save_session "$2" ;;
+    list|-l)    list_sessions ;;
+    resume|-r)  resume_session "$2" ;;
+    delete|-d)  delete_session "$2" ;;
+    *)          usage ;; 
+esac
+
