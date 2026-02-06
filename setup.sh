@@ -61,7 +61,6 @@ link_file "$REPO_ROOT/config/tmux/tmux.conf" "$HOME/.tmux.conf"
 # --- 3. 部署可执行文件 ---
 echo "🚀 Installing Binaries..."
 mkdir -p "$HOME/.local/bin"
-link_file "$REPO_ROOT/bin/vibe" "$HOME/.local/bin/vibe"
 link_file "$REPO_ROOT/bin/vibe-layout.sh" "$HOME/.local/bin/vc"
 chmod +x "$REPO_ROOT/bin/vibe" "$REPO_ROOT/bin/vibe-layout.sh"
 
