@@ -62,7 +62,7 @@ link_file "$REPO_ROOT/config/tmux/tmux.conf" "$HOME/.tmux.conf"
 echo "🚀 Installing Binaries..."
 mkdir -p "$HOME/.local/bin"
 link_file "$REPO_ROOT/bin/vibe-layout.sh" "$HOME/.local/bin/vc"
-chmod +x "$REPO_ROOT/bin/vibe" "$REPO_ROOT/bin/vibe-layout.sh"
+chmod +x  "$REPO_ROOT/bin/vibe-layout.sh"
 
 # --- 4. 部署 Shell 集成脚本 ---
 echo "🐚 Configuring Shell Integration..."
