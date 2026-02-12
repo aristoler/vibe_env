@@ -65,19 +65,19 @@ elif [ "$LAYOUT" == "debug" ]; then
 elif [ "$LAYOUT" == "zen" ]; then
   tmux send-keys -t $SESSION:Editor "nvim ." C-m
 elif [ "$LAYOUT" == "vibe" ]; then
-  # Window 0: Editor (纯粹的代码心流)
+  # Window 0: Editor + ai
+  tmux split-window -h -t "$SESSION:Editor" -l 40%
+
   tmux send-keys -t "$SESSION:Editor.0" "nvim ." C-m
 
-  # ---  Window: Vibe (灵感区) ---
-  tmux new-window -t "$SESSION" -n "Vibe"
-  tmux split-window -h -t "$SESSION:Vibe" -l 30%
-  tmux send-keys -t "$SESSION:Vibe.1" "nvim $NOTES_DIR/$DIR_NAME.md" C-m
-
-  # --- 4. Window: Git (版本区) ---
+  # Window 1: Git + note
   tmux new-window -t "$SESSION" -n "Git"
-  tmux send-keys -t "$SESSION:Git.0" "[ -d .git ] && lazygit || echo 'No Git Repository'" C-m
+  tmux split-window -h -t "$SESSION:Vibe" -l 30%
 
-  # --- 5. Window: Shell (实验室) ---
+  tmux send-keys -t "$SESSION:Git.0" "[ -d .git ] && lazygit || echo 'No Git Repository'" C-m
+  tmux send-keys -t "$SESSION:Git.1" "nvim $NOTES_DIR/$DIR_NAME.md" C-m
+
+  # Window 3: Shell
   tmux new-window -t "$SESSION" -n "Shell"
   tmux split-window -v -t "$SESSION:Shell" -l 30%
 
