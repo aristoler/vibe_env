@@ -82,6 +82,7 @@ elif [ "$LAYOUT" == "vibe" ]; then
   tmux split-window -v -t "$SESSION:Shell" -l 30%
 
   # --- 6. 最终归位 ---
+  tmux select-window -t "$SESSION:Editor"
   tmux select-pane -t "$SESSION:Editor.0"
 fi
 
