@@ -12,3 +12,4 @@
 *.log
 tmp/
 .lazy/
+/config/nvim/lazy-lock.json

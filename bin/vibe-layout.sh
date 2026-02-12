@@ -2,7 +2,7 @@
 
 # 使用当前目录名作为会话名，实现多项目隔离
 DIR_NAME=$(basename "$PWD")
-SESSION="vibe-$DIR_NAME"
+SESSION="$DIR_NAME"
 # 核心逻辑修改：如果没传参数，默认使用 dev 布局
 LAYOUT=${1:-zen}
 RESET=$2
@@ -67,4 +67,3 @@ elif [ "$LAYOUT" == "zen" ]; then
 fi
 
 tmux attach-session -t $SESSION
-
