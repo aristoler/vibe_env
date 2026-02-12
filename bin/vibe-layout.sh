@@ -66,18 +66,18 @@ elif [ "$LAYOUT" == "zen" ]; then
   tmux send-keys -t $SESSION:Editor "nvim ." C-m
 elif [ "$LAYOUT" == "vibe" ]; then
   # Window 0: Editor + ai
-  tmux split-window -h -t "$SESSION:Editor" -l 40%
-
   tmux send-keys -t "$SESSION:Editor.0" "nvim ." C-m
-
-  # Window 1: Git + note
-  tmux new-window -t "$SESSION" -n "Git"
+  
+  # Window 1: vibe
+  tmux new-window -t "$SESSION" -n "Vibe"
   tmux split-window -h -t "$SESSION:Vibe" -l 30%
+  tmux split-window -v -t "$SESSION:Vibe" -l 50%
+  
+  # Window 2: Git + note
+  tmux new-window -t "$SESSION" -n "Git"
 
   tmux send-keys -t "$SESSION:Git.0" "[ -d .git ] && lazygit || echo 'No Git Repository'" C-m
-  tmux send-keys -t "$SESSION:Git.1" "nvim $NOTES_DIR/$DIR_NAME.md" C-m
-
-  # Window 3: Shell
+  
   tmux new-window -t "$SESSION" -n "Shell"
   tmux split-window -v -t "$SESSION:Shell" -l 30%
 
