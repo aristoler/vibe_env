@@ -4,7 +4,7 @@
 DIR_NAME=$(basename "$PWD")
 SESSION="$DIR_NAME"
 # 核心逻辑修改：如果没传参数，默认使用 dev 布局
-LAYOUT=${1:-zen}
+LAYOUT=${1:-vibe}
 RESET=$2
 
 # 检查是否安装了 tmux
