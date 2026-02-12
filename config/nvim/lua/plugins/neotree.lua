@@ -11,6 +11,11 @@ return {
     filesystem = {
       bind_to_cwd = false,
       follow_current_file = { enabled = true },
+      filtered_items = {
+        visible = true,           -- 显示隐藏文件
+        hide_dotfiles = false,    -- 不隐藏点文件 (如 .env)
+        hide_gitignored = false,  -- 如果 .env 在 .gitignore 里，也显示它
+      },
     },
     window = {
       position = "left",
