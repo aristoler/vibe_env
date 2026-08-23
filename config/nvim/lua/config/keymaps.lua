@@ -13,11 +13,11 @@ map("n", "<M-j>", "<cmd>resize -2<cr>", { desc = "Decrease Window Height" })
 
 -- 3. AI Provider 切换菜单
 map("n", "<leader>ap", function()
-  local providers = { "openai", "gemini", "copilot" }
+  local providers = { "openai", "gemini" }
   vim.ui.select(providers, {
     prompt = "🤖 Select AI Brain:",
     format_item = function(item)
-      local icons = { openai = "🧠 DeepSeek", gemini = "✨ Gemini Pro", copilot = "✈️ Copilot" }
+      local icons = { openai = "🧠 DeepSeek", gemini = "✨ Gemini Pro" }
       return icons[item] or item
     end,
   }, function(choice)

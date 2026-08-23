@@ -5,8 +5,7 @@ return {
   opts = {
     -- 1. 指定默认 Provider
     provider = "openai",
-    -- auto_suggestions_provider = "copilot",
-    
+
     -- 2. 所有模型配置必须放在 'providers' 表中 (不再是 vendors)
     providers = {
       -- DeepSeek 配置 (覆盖内置的 openai)
@@ -45,16 +44,6 @@ return {
     "MunifTanjim/nui.nvim",
     "hrsh7th/nvim-cmp",
     "nvim-tree/nvim-web-devicons",
-    {
-      "zbirenbaum/copilot.lua",
-      opts = { 
-        suggestion = { 
-          enabled = true, 
-          auto_trigger = true, 
-          keymap = { accept = "<M-l>" } 
-        } 
-      },
-    },
     { "MeanderingProgrammer/render-markdown.nvim", opts = { file_types = { "markdown", "Avante" } } },
   },
 }
