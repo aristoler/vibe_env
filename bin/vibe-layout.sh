@@ -4,7 +4,7 @@
 DIR_NAME=$(basename "$PWD")
 SESSION="$DIR_NAME"
 # 核心逻辑修改：如果没传参数，默认使用 dev 布局
-LAYOUT=${1:-vibe}
+LAYOUT=${1:-default}
 RESET=$2
 
 # 检查是否安装了 tmux
@@ -84,6 +84,16 @@ elif [ "$LAYOUT" == "vibe" ]; then
   # --- 6. 最终归位 ---
   tmux select-window -t "$SESSION:Editor"
   tmux select-pane -t "$SESSION:Editor.0"
+elif [ "$LAYOUT" == "default" ]; then
+  # Window 0:
+  tmux rename-window -t "$SESSION:Editor" "agent"
+
+  # Window 1: vibe
+  tmux new-window -t "$SESSION" -n "shell"
+
+  # --- 最终归位 ---
+  tmux select-window -t "$SESSION:agent"
+  tmux select-pane -t "$SESSION:agent.0"  
 fi
 
 tmux attach-session -t $SESSION
